@@ -1,11 +1,12 @@
-import numpy as np
 import os
-import sys
 import shutil
-from statsmodels.stats.multitest import multipletests
-import pandas as pd
+import sys
 from typing import Tuple
+
+import numpy as np
+import pandas as pd
 from pysam import AlignmentFile
+from statsmodels.stats.multitest import multipletests
 
 
 def check_extension(filename: str) -> str:
@@ -142,7 +143,10 @@ def pandas_group_processing(res_dict: dict) -> pd.core.frame.DataFrame:
 
 
 def df_to_csv(
-    df: pd.core.frame.DataFrame, outdir: str, outfile: str = "pydamage_results.csv"
+    df: pd.core.frame.DataFrame,
+    outdir: str,
+    outfile: str = "pydamage_results.csv",
+    decimals=6,
 ):
     """Write Pydamage results to disk
 
@@ -150,7 +154,9 @@ def df_to_csv(
         df(pandas DataFrame): Pydamage results DataFrame
         outdir (str): Path to output directory
     """
-    df = df.round(3)
+
+    if decimals > 0:
+        df = df.round(decimals)
     if not outdir:
         outdir = "."
     df.to_csv(f"{outdir}/{outfile}")
@@ -178,7 +184,7 @@ def RMSE(residuals: np.ndarray) -> float:
     Returns:
         float: RMSE
     """
-    return np.sqrt(np.mean(residuals ** 2))
+    return np.sqrt(np.mean(residuals**2))
 
 
 def create_damage_dict(
@@ -218,6 +224,7 @@ def create_damage_dict(
 
     return (damage_dict, non_damage_dict)
 
+
 def prepare_bam(bam: str) -> Tuple[Tuple, str]:
     """Checks for file extension, and returns tuple of mapped refs
 
@@ -246,4 +253,3 @@ def prepare_bam(bam: str) -> Tuple[Tuple, str]:
             present_refs.add(refname)
     alf.close()
     return tuple(present_refs), mode
-    

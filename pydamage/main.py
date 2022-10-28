@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-import pysam
-from pydamage import utils
 import multiprocessing
-from functools import partial
-from pydamage import damage
-from pydamage.plot import damageplot
-from pydamage.exceptions import PyDamageWarning
-from pydamage.accuracy_model import prepare_data, glm_predict
-from pydamage.models import glm_model_params
 import sys
-from tqdm import tqdm
 import warnings
-from pydamage import __version__
+from functools import partial
 
+import pysam
+from tqdm import tqdm
+
+from pydamage import __version__, damage, utils
+from pydamage.accuracy_model import glm_predict, prepare_data
+from pydamage.exceptions import PyDamageWarning
+from pydamage.models import glm_model_params
+from pydamage.plot import damageplot
 
 # def pydamage_analyze(
 #     bam,
@@ -47,6 +46,7 @@ def pydamage_analyze(
     verbose=False,
     force=False,
     group=False,
+    decimals=-1,
 ):
     """Runs the pydamage analysis for each reference separately
 
@@ -138,5 +138,5 @@ def pydamage_analyze(
 
     df = df_glm.merge(df_pydamage, left_index=True, right_index=True)
 
-    utils.df_to_csv(df, outdir)
+    utils.df_to_csv(df, outdir, decimals=decimals)
     return df

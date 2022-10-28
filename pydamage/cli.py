@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+from collections import OrderedDict
+
 import click
-from pydamage.main import pydamage_analyze
+
+from pydamage import __version__
 from pydamage.citation import get_citation
 from pydamage.filter import apply_filter
-from pydamage import __version__
-from collections import OrderedDict
+from pydamage.main import pydamage_analyze
 
 
 class NaturalOrderGroup(click.Group):
@@ -80,6 +82,14 @@ def cli(ctx, outdir):
     is_flag=True,
     help="Use entire BAM file as single reference for analyis "
     "(ignore reference headers)",
+)
+@click.option(
+    "-d",
+    "--decimals",
+    default=-1,
+    type=int,
+    show_default=True,
+    help="Decimals",
 )
 def analyze(ctx, no_args_is_help=True, **kwargs):
     """\b
