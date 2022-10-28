@@ -49,7 +49,11 @@ def makedir(dirpath: str, confirm: bool = True, force: bool = False):
     os.makedirs(dirpath)
 
 
-def pandas_processing(res_dict: dict, wlen: int) -> pd.core.frame.DataFrame:
+def pandas_processing(
+    res_dict: dict,
+    wlen: int,
+    decimals=-1,
+) -> pd.core.frame.DataFrame:
     """Performs Pandas processing of Pydamage results
 
     Args:
@@ -101,7 +105,8 @@ def pandas_processing(res_dict: dict, wlen: int) -> pd.core.frame.DataFrame:
     df.sort_values(by=["qvalue"], inplace=True)
     df.set_index("reference", inplace=True)
     df.dropna(axis=1, how="all", inplace=True)
-    df = df.round(3)
+    if decimals >= 0:
+        df = df.round(decimals)
     return df
 
 
@@ -146,7 +151,7 @@ def df_to_csv(
     df: pd.core.frame.DataFrame,
     outdir: str,
     outfile: str = "pydamage_results.csv",
-    decimals=6,
+    decimals=-1,
 ):
     """Write Pydamage results to disk
 
